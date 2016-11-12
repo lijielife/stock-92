@@ -483,7 +483,12 @@ function showStockDetail(stock) {
     });
 }
 
+var currentStockNews;
 $(document).on('click', '#news-feeds-div-a', function () {
+    if (currentStockNews == currentStock.symbol) {
+        return;
+    }
+
     var newsFeedsDiv = $('#news-feeds-div');
     newsFeedsDiv.html('<p>Loading...</p>');
 
@@ -507,7 +512,17 @@ $(document).on('click', '#news-feeds-div-a', function () {
 
         success: function (response, textStatus, xhr) {
             if (xhr.status == 200) {
-                newsFeedsDiv.html('');
+                newsFeedsDiv.html(
+                    '<div class="panel panel-info">\
+                    <div class="panel-body">\
+                    <div class="row">\
+                    <div class="col-md-12">\
+                    <a href="//bing.com" target="_blank">Powered by <img src="images/bing.png" alt="Bing"/> News Search</a>\
+                    </div>\
+                    </div>\
+                    </div>\
+                    </div>'
+                );
 
                 var articles = response.value;
                 $.each(articles, function (index, article) {
@@ -526,6 +541,8 @@ $(document).on('click', '#news-feeds-div-a', function () {
                         </div>'
                     );
                 });
+
+                currentStockNews = currentStock.symbol;
             } else {
                 var error = response.error;
                 newsFeedsDiv.html(
