@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stock Market Helper</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.min.css" rel="stylesheet">
+    <link href="css/stock.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="blue-background">
+
+<div class="container">
+    <!--<div class="row img-rounded page-header white-background">
+        <div class="col-md-12">
+            <h1>Stock Market Helper <small> homework 8</small></h1>
+        </div>
+    </div>-->
+    <hr/>
+
+    <div class="row white-background img-rounded" id="search-div">
+        <div class="col-md-12">
+            <h3 class="text-center">Stock Market Search</h3>
+        </div>
+
+        <form class="vertical-center">
+            <div class="col-md-3 vertical-center">
+                <label class="vertical-center required" for="stock-input">Enter the stock name or symbol: </label>
+                <label class="vertical-center invisible" id="spinner"><img src="images/spinner.gif"
+                                                                           alt="spinner"/></label>
+            </div>
+
+            <div class="col-md-6">
+                <input type="text" required class="form-control" id="stock-input" placeholder="Apple Inc or AAPL">
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-primary" id="get-quote-button"><span class="glyphicon glyphicon-search"></span>
+                    Get Quote
+                </button>
+                <button type="reset" class="btn btn-default" id="clear-button"><span
+                        class="glyphicon glyphicon-refresh"></span> Clear
+                </button>
+            </div>
+        </form>
+
+        <div class="col-md-3 col-md-offset-3">
+            <p id="search-message" class="invisible"></p>
+        </div>
+        <div class="col-md-6 increase-margin">
+            <p class="text-right">Powered by
+                <a href="http://dev.markitondemand.com/MODApis/" target="_blank"><img src="images/mod-logo.png"
+                                                                                      alt="markit on demand logo"/></a>
+            </p>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="row white-background img-rounded" id="search-result-div">
+        <div class="col-md-12 carousel slide increase-margin" data-interval="false" id="stock-carousel">
+            <div class="carousel-inner">
+
+                <div class="item active" id="favorite-div">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-3 vertical-center">
+                                    <p class="lead vertical-center">Favorite List</p>
+                                </div>
+                                <div class="col-md-3 col-md-offset-3 text-right">
+                                    <label class="vertical-center" for="auto-refresh-checkbox">Automatic
+                                        Refresh: </label>
+                                    <span data-toggle="tooltip" data-original-title="Automatic refresh"><input
+                                            type="checkbox" id="auto-refresh-checkbox"/></span>
+                                </div>
+                                <div class="col-md-3 nopadding">
+                                    <button type="button" class="btn btn-default" data-toggle="tooltip"
+                                            data-original-title="Refresh the list" id="refresh-button"><span
+                                            class="glyphicon glyphicon-refresh"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-striped" id="favorite-table">
+                                <tr>
+                                    <th class="col-md-1">Symbol</th>
+                                    <th class="col-md-3">Company Name</th>
+                                    <th class="col-md-2">Stock Price</th>
+                                    <th class="col-md-2">Change (Change Percent)</th>
+                                    <th class="col-md-2">Market Cap</th>
+                                    <!--trash can-->
+                                    <th class="col-md-1"></th>
+                                </tr>
+
+                                <!--<tr>
+                                    <td><a href="#stock-carousel" data-slide-to="1">AAPL</a></td>
+                                    <td>Apple Inc</td>
+                                    <td>$ 105.65</td>
+                                    <td>-0.48 ( -0.45% ) <img alt="↓" src="images/down.png"></td>
+                                    <td>585.79 Billion</td>
+                                    <td class="text-right">
+                                        <button class="btn btn-default delete-favorite" type="button"><span class="glyphicon glyphicon-trash"></span></button>
+                                    </td>
+                                </tr>-->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item" id="stock-detail-div">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <a class="btn btn-default glyphicon glyphicon-chevron-left" href="#stock-carousel"
+                                       data-slide-to="0" data-toggle="tooltip"
+                                       data-original-title="Return to favorite list" id="return-favorite-button"></a>
+                                </div>
+                                <div class="col-md-11 vertical-center">
+                                    <p class="lead vertical-center text-center">Stock Details</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="nav nav-pills">
+                                <li role="presentation" class="active">
+                                    <a data-toggle="tab" href="#current-stock-div" id="current-stock-div-a"><span
+                                            class="glyphicon glyphicon-dashboard"></span> Current Stock</a>
+                                </li>
+                                <li role="presentation">
+                                    <a data-toggle="tab" href="#historical-charts-div" id="historical-charts-a"><span
+                                            class="glyphicon glyphicon-stats"></span> Historical Charts</a>
+                                </li>
+                                <li role="presentation">
+                                    <a data-toggle="tab" href="#news-feeds-div" id="news-feeds-div-a"><span
+                                            class="glyphicon glyphicon-link"></span> News Feeds</a>
+                                </li>
+                            </ul>
+
+                            <hr/>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="current-stock-div">
+                                    <div class="col-md-6" id="stock-details-div">
+                                        <h4>Stock Details</h4>
+                                        <table class="table table-striped" id="stock-details-table">
+                                            <tr>
+                                                <th>Name</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Symbol</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Last Price</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Change (Change Percent)</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Time and Date</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Market Cap</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Volume</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Change YTD (Change Percent YTD)</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>High Price</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Low Price</th>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Opening Price</th>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6" id="current-day-stock-chart-div">
+                                        <div id="icons-div">
+                                            <p class="text-right">
+                                                <!--<div class="fb-like" data-share="true" data-width="450"-->
+                                                <!--data-show-faces="true">-->
+                                                <!--</div>-->
+                                                <button class="btn btn-default detail-button vertical-center fb-like"
+                                                        data-toggle="tooltip" data-original-title="Share to facebook"
+                                                        data-share="true" data-width="450" data-show-faces="true"
+                                                        id="share-button">
+                                                    <img src="images/facebook-logo.png" alt="Share to facebook"/>
+                                                </button>
+                                                <input class="detail-button favorite-button" type="checkbox"
+                                                       id="favorite-input"/>
+                                                <label class="detail-button favorite-button" data-toggle="tooltip"
+                                                       id="favorite-label" for="favorite-input"></label>
+                                            </p>
+                                        </div>
+                                        <div id="yahoo-chart-div">
+                                            <img id="yahoo-chart" alt="Current Day Stock Chart from Yahoo!"
+                                                 src="images/placeholder.png"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="historical-charts-div">
+                                </div>
+                                <div class="tab-pane" id="news-feeds-div">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-toggle.min.js"></script>
+<script src="js/bootstrap-switch.min.js"></script>
+<script src="js/highstock-5.0.2.js"></script>
+<script src="js/imagesloaded.pkgd.min.js"></script>
+<script src="js/stock.js"></script>
+</body>
+
+</html>

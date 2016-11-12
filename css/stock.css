@@ -1,0 +1,82 @@
+/*background color of the entire page*/
+.blue-background {
+    background-color: #182b8c;
+}
+
+/*background color of a div*/
+.white-background {
+    background-color: white;
+}
+
+/*make text vertically center*/
+.vertical-center {
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+/*make text vertically center in th and td*/
+th, td {
+    vertical-align: middle !important;
+}
+
+.stock-rise {
+    color: green;
+}
+
+.stock-fall {
+    color: red;
+}
+
+#search-message {
+    color: red;
+}
+
+/*add an asterisk after "required" contents*/
+.required:after {
+    color: red;
+    content: ' *';
+    display: inline;
+}
+
+.nopadding {
+    padding: 0 !important;
+}
+
+.increase-margin {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/*not using bootstrap's "hide" because it has "!important",
+the element cannot be shown again*/
+.invisible {
+    visibility: hidden;
+}
+
+/*"share to facebook" button and "favorite" button*/
+.detail-button {
+    padding: 0 4px 0 4px !important;
+    border: none !important;
+}
+
+/*make the checkbox "favorite" appears like "star" and "unstar"*/
+#favorite-input {
+    display: none;
+}
+
+#favorite-input:checked + #favorite-label {
+    background: url(../images/star.png);
+}
+
+#favorite-input + #favorite-label {
+    background: url(../images/unstar.png);
+}
+
+#favorite-label {
+    float: right;
+    height: 36px;
+    width: 36px;
+    cursor: pointer;
+}
+
