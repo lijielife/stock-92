@@ -19,7 +19,7 @@ window.fbAsyncInit = function () {
 }(document, 'script', 'facebook-jssdk'));
 //=====facebook sdk initialization=====
 
-var phpURL = 'https://zksh.herokuapp.com/query.php?';
+var phpURL = './query.php?';
 var currentStock;
 
 $(document).ready(function () {
@@ -91,11 +91,6 @@ $('#get-quote-button').click(function () {
             }
         });
     }
-
-    //since the button is in a <form>,
-    //return false to prevent submitting,
-    //which will cause page refresh
-    return false;
 });
 
 $('#clear-button').click(function () {
