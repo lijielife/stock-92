@@ -162,7 +162,7 @@ function isInLocalStorage(symbol) {
 $('#share-button').click(function () {
     FB.ui({
         method: 'feed',
-        link: 'https://zksh.herokuapp.com/',
+        link: 'https://stockmarkethelper.herokuapp.com/',
         name: 'Current Stock Price of ' + currentStock.name + ' is ' + currentStock.lastPriceText,
         description: 'Stock Information of ' + currentStock.name + ' (' + currentStock.symbol + ')',
         caption: 'Last Traded Price: ' + currentStock.lastPriceText + ' Change: ' + currentStock.changeText + ' (' + currentStock.changePercentText + ') ',
@@ -222,16 +222,6 @@ function generateStockObject(result) {
         return null;
     }
 
-    // alert(stock.Timestamp);
-    // var date = Date.parse(stock.Timestamp);
-    // alert(date);
-    // alert(date.getTime());
-    // alert(date.getTimezoneOffset());
-    // var utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
-    // alert(utcTime);
-    // var dateCA = new Date(utcTime + (3600000 * 8)); //timezone of CA
-    // alert(dateCA.toLocaleString());
-
     var stockObject = {};
 
     //to distinguish stock data from other data in local storage
@@ -286,6 +276,7 @@ function generateStockObject(result) {
 }
 
 var historicalChartsDiv = $('#historical-charts-div');
+var historicalCharts;
 
 function showStockDetail(stock) {
     currentStock = stock;
@@ -327,21 +318,17 @@ function showStockDetail(stock) {
     }
 
     //set chart, using yahoo
-    if (typeof yahooChartWidth === 'undefined') {
-        var yahooChartWidth = $('#yahoo-chart-div').width();
-    }
-    if (typeof yahooChartHeight === 'undefined') {
-        var yahooChartHeight = $('#stock-details-div').height() - $('#icons-div').height();
-    }
-
     var yahooChart = $('#yahoo-chart');
-    yahooChart.attr('src', getYahooChart(stock.symbol, yahooChartWidth, yahooChartHeight));
+    yahooChart.attr('src', getYahooChart(stock.symbol, $('#yahoo-chart-div').width(), $('#stock-details-div').height() - $('#icons-div').height()));
     yahooChart.imagesLoaded(function () {
-        updateHistoricalChartsDivHeight();
+        // make historical charts div height same as detail page
+        var detailHeight = $('#stock-details-div')[0].scrollHeight;
+        var chartHeight = $('#current-day-stock-chart-div')[0].scrollHeight;
+        historicalChartsDiv.css('height', Math.max(detailHeight, chartHeight));
     });
 
     //set historical charts, using highstock
-    var numberOfDays = 1095;   //1095;
+    var numberOfDays = 1095;
     var interactive = {
         Normalized: false,
         NumberOfDays: numberOfDays,
@@ -352,12 +339,11 @@ function showStockDetail(stock) {
             Params: ['c']    //'ohlc'
         }]
     };
-    var highstockQuery = phpURL + 'interactive=' + JSON.stringify(interactive);
 
     historicalChartsDiv.html('<p>Loading...</p>');
+
+    var highstockQuery = phpURL + 'interactive=' + JSON.stringify(interactive);
     $.getJSON(highstockQuery, function (result) {
-        //if (NumberOfDays: 3), the result is:
-        //{'Labels':null,'Positions':[0,0.5,1],'Dates':['2016-03-28T00:00:00','2016-03-29T00:00:00','2016-03-30T00:00:00'],'Elements':[{'Currency':'USD','TimeStamp':null,'Symbol':'AAPL','Type':'price','DataSeries':{'open':{'min':104.89,'max':108.64,'maxDate':'2016-03-30T00:00:00','minDate':'2016-03-29T00:00:00','values':[106,104.89,108.64]},'high':{'min':106.19,'max':110.41,'maxDate':'2016-03-30T00:00:00','minDate':'2016-03-28T00:00:00','values':[106.19,107.79,110.41]},'low':{'min':104.88,'max':108.6,'maxDate':'2016-03-30T00:00:00','minDate':'2016-03-29T00:00:00','values':[105.06,104.88,108.6]},'close':{'min':105.19,'max':110.18,'maxDate':'2016-03-30T00:00:00','minDate':'2016-03-28T00:00:00','values':[105.19,107.68,110.18]}}}]}
         var stockData = $.parseJSON(result);
         if (stockData && typeof stockData === 'object' && stockData !== null) {
             var dates = stockData.Dates;
@@ -407,7 +393,7 @@ function showStockDetail(stock) {
             var highstockChartData = $.parseJSON(data);
 
             historicalChartsDiv.html('');
-            new Highcharts.StockChart({
+            historicalCharts = new Highcharts.StockChart({
                 chart: {
                     renderTo: 'historical-charts-div',
                     width: $('#current-stock-div').width()
@@ -477,6 +463,10 @@ function showStockDetail(stock) {
         }
     });
 }
+
+$(window).resize(function () {
+    historicalCharts.chart.redraw()
+});
 
 var currentStockNews;
 $(document).on('click', '#news-feeds-div-a', function () {
@@ -552,13 +542,6 @@ $(document).on('click', '#news-feeds-div-a', function () {
         }
     });
 });
-
-// make historical chart height same as detail page
-function updateHistoricalChartsDivHeight() {
-    var detailHeight = $('#stock-details-div')[0].scrollHeight;
-    var chartHeight = $('#current-day-stock-chart-div')[0].scrollHeight;
-    historicalChartsDiv.css('height', Math.max(detailHeight, chartHeight));
-}
 
 function addStockToFavoriteList(stock) {
     removeFromFavoriteList(stock.symbol);
