@@ -7,11 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Stock Market Helper</title>
 
-    <!-- Bootstrap -->
+    <!-- css for development -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="css/bootstrap-switch.min.css" rel="stylesheet">
     <link href="css/jquery-ui.min.css" rel="stylesheet">
+
+    <!-- css for production -->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">-->
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">-->
+
     <link href="css/stock.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -39,10 +46,11 @@
         </div>
 
         <div class="col-md-6">
-            <input type="text" required class="form-control" id="stock-input" placeholder="Apple Inc or AAPL">
+            <input type="text" required class="form-control" id="stock-input"
+                   placeholder="Try &quot;Blizzard&quot; or &quot;ATVI&quot;">
         </div>
 
-        <div class="col-md-3">
+        <div class=" col-md-3">
             <button class="btn btn-primary" id="get-quote-button"><span class="glyphicon glyphicon-search"></span>
                 Get Quote
             </button>
@@ -77,8 +85,7 @@
                                 <div class="col-md-3 col-md-offset-3 text-right">
                                     <label class="vertical-center" for="auto-refresh-checkbox">Automatic
                                         Refresh: </label>
-                                    <span data-toggle="tooltip" data-original-title="Automatic refresh"><input
-                                            type="checkbox" id="auto-refresh-checkbox"/></span>
+                                    <input type="checkbox" id="auto-refresh-checkbox"/>
                                 </div>
                                 <div class="col-md-3 nopadding">
                                     <button type="button" class="btn btn-default" data-toggle="tooltip"
@@ -235,13 +242,24 @@
     </div>
 </div>
 
+<!-- js for development -->
 <script src="js/jquery-3.1.1.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-toggle.min.js"></script>
 <script src="js/bootstrap-switch.min.js"></script>
-<script src="js/highstock-5.0.2.js"></script>
+<script src="js/highstock-5.0.4.js"></script>
 <script src="js/imagesloaded.pkgd.min.js"></script>
+
+<!-- js for production -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/highstock/5.0.4/highstock.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.1/imagesloaded.pkgd.min.js"></script>-->
+
 <script src="js/stock.js"></script>
 </body>
 

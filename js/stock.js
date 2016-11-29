@@ -1,29 +1,12 @@
-//=====facebook sdk initialization=====
-window.fbAsyncInit = function () {
-    FB.init({
-        appId: '1719230951733278',
-        xfbml: true,
-        version: 'v2.8'
-    });
-};
-
-(function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {
-        return;
-    }
-    js = d.createElement(s);
-    js.id = id;
-    js.src = 'js/facebook_sdk.js';
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-//=====facebook sdk initialization=====
-
 var phpURL = './query.php?';
 var currentStock;
 
 $(document).ready(function () {
-    // load data from local storage
+    loadAllFromLocalStorage();
+    $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
+});
+
+function loadAllFromLocalStorage() {
     for (var i = 0; i != localStorage.length; ++i) {
         var key = localStorage.key(i);
         var item = localStorage.getItem(key);
@@ -38,7 +21,7 @@ $(document).ready(function () {
         catch (e) {
         }
     }
-});
+}
 
 var searchMessage = $('#search-message');
 var stockInput = $('#stock-input');
@@ -157,6 +140,27 @@ function isInLocalStorage(symbol) {
     return localStorage.getItem(symbol) !== null;
 }
 //=====local storage operations=====
+
+//=====facebook sdk initialization=====
+window.fbAsyncInit = function () {
+    FB.init({
+        appId: '1719230951733278',
+        xfbml: true,
+        version: 'v2.8'
+    });
+};
+
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+        return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = 'js/facebook_sdk.js';
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+//=====facebook sdk initialization=====
 
 // share to facebook
 $('#share-button').click(function () {
@@ -434,7 +438,7 @@ function showStockDetail(stock) {
                             count: 1,
                             text: 'All'
                         }],
-                    selected: 0,
+                    selected: 5,
                     inputEnabled: false
                 },
                 series: [{
@@ -579,7 +583,3 @@ function removeFromFavoriteList(symbol) {
 function getYahooChart(symbol, width, height) {
     return 'http://chart.finance.yahoo.com/t?s=' + symbol + '&lang=en-US&width=' + width + '&height=' + height;
 }
-
-//tooltip or popover
-//$('[data-toggle="popover"]').popover({trigger: 'hover','placement': 'top'});
-$('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
