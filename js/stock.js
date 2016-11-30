@@ -2,26 +2,48 @@ var phpURL = './query.php?';
 var currentStock;
 
 $(document).ready(function () {
-    loadAllFromLocalStorage();
+    loadAllStocksFromLocalStorage();
     $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
 });
 
-function loadAllFromLocalStorage() {
-    for (var i = 0; i != localStorage.length; ++i) {
-        var key = localStorage.key(i);
-        var item = localStorage.getItem(key);
-        try {
-            var stock = $.parseJSON(item);
-            if (stock && typeof stock === 'object' && stock !== null) {
-                if (stock.isStock) {
-                    addStockToFavoriteList(stock);
-                }
-            }
-        }
-        catch (e) {
-        }
+var stockListKey = 'stock_helper_stock_list';
+var stockSet;
+
+function loadAllStocksFromLocalStorage() {
+    var stockSetJSON = localStorage.getItem(stockListKey);
+    if (stockSetJSON === null) {
+        stockSet = {};
+    } else {
+        stockSet = $.parseJSON(stockSetJSON);
+        $.each(stockSet, function (symbol) {
+            var stock = loadFromLocalStorage(symbol);
+            addStockToFavoriteList(stock);
+        });
     }
 }
+
+//=====local storage operations=====
+function saveToLocalStorage(stock) {
+    stockSet[stock.symbol] = true;
+    localStorage.setItem(stockListKey, JSON.stringify(stockSet));
+    localStorage.setItem(stock.symbol, JSON.stringify(stock));
+}
+
+function loadFromLocalStorage(symbol) {
+    var item = localStorage.getItem(symbol);
+    return $.parseJSON(item);
+}
+
+function removeFromLocalStorage(symbol) {
+    delete stockSet[symbol];
+    localStorage.setItem(stockListKey, JSON.stringify(stockSet));
+    localStorage.removeItem(symbol);
+}
+
+function isInLocalStorage(symbol) {
+    return localStorage.getItem(symbol) !== null;
+}
+//=====local storage operations=====
 
 var searchMessage = $('#search-message');
 var stockInput = $('#stock-input');
@@ -122,25 +144,6 @@ function refreshFavoriteList() {
     });
 }
 
-//=====local storage operations=====
-function saveToLocalStorage(stock) {
-    localStorage.setItem(stock.symbol, JSON.stringify(stock));
-}
-
-function loadFromLocalStorage(symbol) {
-    var item = localStorage.getItem(symbol);
-    return $.parseJSON(item);
-}
-
-function removeFromLocalStorage(symbol) {
-    localStorage.removeItem(symbol);
-}
-
-function isInLocalStorage(symbol) {
-    return localStorage.getItem(symbol) !== null;
-}
-//=====local storage operations=====
-
 //=====facebook sdk initialization=====
 window.fbAsyncInit = function () {
     FB.init({
@@ -194,7 +197,8 @@ $('#favorite-input').change(function () {
 
 $(document).on('click', '.stock-detail-a', function () {
     var symbol = $(this).text();
-    showStockDetail(loadFromLocalStorage(symbol));
+    var stock = loadFromLocalStorage(symbol);
+    showStockDetail(stock);
 });
 
 //delete current row in the favorite list
@@ -309,8 +313,6 @@ function showStockDetail(stock) {
     trs.eq(8).children('td').eq(0).html(stock.highPriceText);
     trs.eq(9).children('td').eq(0).html(stock.lowPriceText);
     trs.eq(10).children('td').eq(0).html(stock.openingPriceText);
-
-    //set right div
 
     //set favorite icon
     if (isInLocalStorage(stock.symbol)) {
