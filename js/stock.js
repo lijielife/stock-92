@@ -147,10 +147,11 @@ function refreshFavoriteList() {
 //=====facebook sdk initialization=====
 window.fbAsyncInit = function () {
     FB.init({
-        appId: '1719230951733278',
+        appId: '1577100328996620',
         xfbml: true,
         version: 'v2.8'
     });
+    FB.AppEvents.logPageView();
 };
 
 (function (d, s, id) {
@@ -160,7 +161,7 @@ window.fbAsyncInit = function () {
     }
     js = d.createElement(s);
     js.id = id;
-    js.src = 'js/facebook_sdk.js';
+    js.src = "js/facebook_sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 //=====facebook sdk initialization=====
