@@ -169,7 +169,7 @@ window.fbAsyncInit = function () {
 $('#share-button').click(function () {
     FB.ui({
         method: 'feed',
-        link: 'https://stockmarkethelper.herokuapp.com/',
+        link: 'https://smhzk.herokuapp.com/',
         name: 'Current Stock Price of ' + currentStock.name + ' is ' + currentStock.lastPriceText,
         description: 'Stock Information of ' + currentStock.name + ' (' + currentStock.symbol + ')',
         caption: 'Last Traded Price: ' + currentStock.lastPriceText + ' Change: ' + currentStock.changeText + ' (' + currentStock.changePercentText + ') ',
